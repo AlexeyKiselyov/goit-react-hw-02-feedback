@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Statistics } from "./Statistics/Statistics";
+import {FeedbackOptions} from './FeedbackOptions/FeedbackOptions';
+import {Section} from '../components/Section/Section';
+import { Notification } from "./Notification/Notification";
 // ===========================
 
 export class App extends Component{
@@ -11,9 +14,9 @@ export class App extends Component{
 
   handleButton = (e) => {
     const { name } = e.target;
-    this.setState({
-      [name]: this.state[name]+1
-    })
+    this.setState(prevState=>({
+      [name]: prevState[name]+1
+    }))
   }
 
   countTotalFeedback = () => { 
@@ -26,18 +29,22 @@ export class App extends Component{
     if (Number.isNaN(percent)) return 0;
     return percent;
   };
-
   
   render() {
     const { good, neutral, bad } = this.state;   
     
     return (
       <>
-        <h2>Please leave feedback</h2>
-        <button type="button" name="good" onClick={this.handleButton}>Good</button>
-        <button type="button" name="neutral" onClick={this.handleButton}>Neutral</button>
-        <button type="button" name="bad" onClick={this.handleButton}>Bad</button>
-        <Statistics good={good} neutral={neutral} bad={bad} total={this.countTotalFeedback} positivePercentage={this.countPositiveFeedbackPercentage} />        
+      <Section title="Please leave feedback" >
+        <FeedbackOptions options={this.state} handleButton={this.handleButton}/>
+      </Section>
+
+      <Section title="Statistics">
+        {this.countTotalFeedback()
+        ?<Statistics good={good} neutral={neutral} bad={bad} total={this.countTotalFeedback} positivePercentage={this.countPositiveFeedbackPercentage}/>
+        :<Notification message="There is no feedback"/>
+        }               
+      </Section>      
       </>
     );  
       
@@ -46,24 +53,28 @@ export class App extends Component{
 
 
 
+/* <h2>Please leave feedback</h2>
+        <button type="button" name="good" onClick={this.handleButton}>Good</button>
+        <button type="button" name="neutral" onClick={this.handleButton}>Neutral</button>
+        <button type="button" name="bad" onClick={this.handleButton}>Bad</button> */
+/*
+ handleGoodIncrement = () => {
+    this.setState({
+      good: this.state.good + 1
+    });
+  }
 
- // handleGoodIncrement = () => {
-  //   this.setState({
-  //     good: this.state.good + 1
-  //   });
-  // }
+  handleNeutralIncrement = () => {
+    this.setState({
+      neutral: this.state.neutral + 1
+    });
+  }
 
-  // handleNeutralIncrement = () => {
-  //   this.setState({
-  //     neutral: this.state.neutral + 1
-  //   });
-  // }
-
-  // handleBadIncrement = () => {
-  //   this.setState({
-  //     bad: this.state.bad + 1
-  //   });
-  // }
+  handleBadIncrement = () => {
+    this.setState({
+      bad: this.state.bad + 1
+    });
+  }*/
 
 
   /* <h3>Statistics</h3>
@@ -71,4 +82,4 @@ export class App extends Component{
         <p>Neutral:<span>{neutral}</span></p>
         <p>Bad:<span>{bad}</span></p>
         <p>Total:<span>{this.countTotalFeedback()}</span></p>
-        <p>Positive feedback:<span>{this.countPositiveFeedbackPercentage()}%</span></p>         */
+        <p>Positive feedback:<span>{this.countPositiveFeedbackPercentage()}%</span></p> */
